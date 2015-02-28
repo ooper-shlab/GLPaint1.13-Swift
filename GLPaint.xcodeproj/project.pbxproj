@@ -37,7 +37,6 @@
 		AFCEBA2611D96215001AA22A /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AFCEBA1F11D96215001AA22A /* Icon@2x.png */; };
 		AFCEBA2711D96215001AA22A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = AFCEBA2011D96215001AA22A /* iTunesArtwork */; };
 		D7AE538B1A8645390085AA3B /* NumTypes+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AE53891A8645390085AA3B /* NumTypes+Conversion.swift */; };
-		D7AE538E1A8646000085AA3B /* GLK.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AE538D1A8646000085AA3B /* GLK.swift */; };
 		D7B915861A767513002949C6 /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B915821A767513002949C6 /* AppController.swift */; };
 		D7B915871A767513002949C6 /* PaintingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B915831A767513002949C6 /* PaintingView.swift */; };
 		D7B915881A767513002949C6 /* PaintingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B915841A767513002949C6 /* PaintingViewController.swift */; };
@@ -82,7 +81,6 @@
 		AFCEBA2011D96215001AA22A /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = Images/iTunesArtwork; sourceTree = "<group>"; };
 		D7AE53871A8644770085AA3B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D7AE53891A8645390085AA3B /* NumTypes+Conversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NumTypes+Conversion.swift"; path = "Classes/OOPUtils/NumTypes+Conversion.swift"; sourceTree = "<group>"; };
-		D7AE538D1A8646000085AA3B /* GLK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GLK.swift; path = Classes/OOPUtils/GLK.swift; sourceTree = "<group>"; };
 		D7B915821A767513002949C6 /* AppController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppController.swift; path = Classes/AppController.swift; sourceTree = "<group>"; };
 		D7B915831A767513002949C6 /* PaintingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaintingView.swift; path = Classes/PaintingView.swift; sourceTree = "<group>"; };
 		D7B915841A767513002949C6 /* PaintingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaintingViewController.swift; path = Classes/PaintingViewController.swift; sourceTree = "<group>"; };
@@ -136,7 +134,6 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				D7AE538D1A8646000085AA3B /* GLK.swift */,
 				D7AE53891A8645390085AA3B /* NumTypes+Conversion.swift */,
 				D7B9158A1A767532002949C6 /* debug.swift */,
 				D7B9158B1A767532002949C6 /* fileUtil.swift */,
@@ -294,7 +291,6 @@
 				D7B915901A767532002949C6 /* fileUtil.swift in Sources */,
 				D7AE538B1A8645390085AA3B /* NumTypes+Conversion.swift in Sources */,
 				D7B9158F1A767532002949C6 /* debug.swift in Sources */,
-				D7AE538E1A8646000085AA3B /* GLK.swift in Sources */,
 				D7B915881A767513002949C6 /* PaintingViewController.swift in Sources */,
 				D7B915891A767513002949C6 /* SoundEffect.swift in Sources */,
 			);

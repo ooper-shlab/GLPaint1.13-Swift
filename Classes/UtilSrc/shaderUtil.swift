@@ -88,10 +88,10 @@ struct glue {
         glCompileShader(shader)
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH.ui, &logLength)
         if logLength > 0 {
-            let log = UnsafeMutablePointer<CChar>(malloc(logLength.ul))
+            let log = UnsafeMutablePointer<CChar>.alloc(logLength.l)
             glGetShaderInfoLog(shader, logLength, &logLength, log)
             LogInfo("Shader compile log:\n%@", String.fromCString(log)!)
-            free(log)
+            log.dealloc(logLength.l)
         }
         
         glGetShaderiv(shader, GL_COMPILE_STATUS.ui, &status)
@@ -115,10 +115,10 @@ struct glue {
         glLinkProgram(program)
         glGetProgramiv(program, GL_INFO_LOG_LENGTH.ui, &logLength)
         if logLength > 0 {
-            let log = UnsafeMutablePointer<CChar>(malloc(logLength.ul))
+            let log = UnsafeMutablePointer<CChar>.alloc(logLength.l)
             glGetProgramInfoLog(program, logLength, &logLength, log)
             LogInfo("Program link log:\n%@", String.fromCString(log)!)
-            free(log)
+            log.dealloc(logLength.l)
         }
         
         glGetProgramiv(program, GL_LINK_STATUS.ui, &status)
@@ -138,10 +138,10 @@ struct glue {
         glValidateProgram(program)
         glGetProgramiv(program, GL_INFO_LOG_LENGTH.ui, &logLength)
         if logLength > 0 {
-            let log = UnsafeMutablePointer<CChar>(malloc(logLength.ul))
+            let log = UnsafeMutablePointer<CChar>.alloc(logLength.l)
             glGetProgramInfoLog(program, logLength, &logLength, log)
             LogInfo("Program validate log:\n%@", String.fromCString(log)!)
-            free(log)
+            log.dealloc(logLength.l)
         }
         
         glGetProgramiv(program, GL_VALIDATE_STATUS.ui, &status)

@@ -56,6 +56,7 @@
 */
 
 import UIKit
+import GLKit
 
 //CONSTANTS:
 
@@ -136,7 +137,7 @@ class PaintingView: UIView {
     required init(coder: NSCoder) {
         
         super.init(coder: coder)
-        let eaglLayer = self.layer as CAEAGLLayer
+        let eaglLayer = self.layer as! CAEAGLLayer
         
         eaglLayer.opaque = true
         // In this application, we want to retain the EAGLDrawable contents after a call to presentRenderbuffer.
@@ -168,7 +169,7 @@ class PaintingView: UIView {
         if !initialized {
             initialized = self.initGL()
         } else {
-            self.resizeFromLayer(self.layer as CAEAGLLayer)
+            self.resizeFromLayer(self.layer as! CAEAGLLayer)
         }
         
         // Clear the framebuffer the first time it is allocated
@@ -214,11 +215,13 @@ class PaintingView: UIView {
                 glUniform1i(program[PROGRAM_POINT].uniform[UNIFORM_TEXTURE], 0)
                 
                 // viewing matrices
-                let projectionMatrix = GLK.Matrix4.MakeOrtho(0, backingWidth.f, 0, backingHeight.f, -1, 1)
-                let modelViewMatrix = GLK.Matrix4.Identity
-                let MVPMatrix = GLK.Matrix4.Multiply(projectionMatrix, modelViewMatrix)
+                let projectionMatrix = GLKMatrix4MakeOrtho(0, backingWidth.f, 0, backingHeight.f, -1, 1)
+                let modelViewMatrix = GLKMatrix4Identity
+                var MVPMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix)
                 
-                glUniformMatrix4fv(program[PROGRAM_POINT].uniform[UNIFORM_MVP], 1, GL_FALSE.ub, MVPMatrix.m)
+                withUnsafePointer(&MVPMatrix) {ptrMVP in
+                    glUniformMatrix4fv(program[PROGRAM_POINT].uniform[UNIFORM_MVP], 1, GL_FALSE.ub, UnsafePointer(ptrMVP))
+                }
                 
                 // point size
                 glUniform1f(program[PROGRAM_POINT].uniform[UNIFORM_POINT_SIZE], brushTexture.width.f / kBrushScale.f)
@@ -246,7 +249,7 @@ class PaintingView: UIView {
         // Make sure the image exists
         if brushImage != nil {
             // Allocate  memory needed for the bitmap context
-            var brushData = [GLubyte](count: width.l * height.l * 4, repeatedValue: 0)
+            var brushData = [GLubyte](count: width * height * 4, repeatedValue: 0)
             // Use  the bitmatp creation function provided by the Core Graphics framework.
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedLast.rawValue)
             let brushContext = CGBitmapContextCreate(&brushData, width, height, 8, width * 4, CGImageGetColorSpace(brushImage), bitmapInfo)
@@ -280,7 +283,7 @@ class PaintingView: UIView {
         glBindRenderbuffer(GL_RENDERBUFFER.ui, viewRenderbuffer)
         // This call associates the storage for the current render buffer with the EAGLDrawable (our CAEAGLLayer)
         // allowing us to draw into a buffer that will later be rendered to screen wherever the layer is (which corresponds with our view).
-        context.renderbufferStorage(GL_RENDERBUFFER.l, fromDrawable: self.layer as EAGLDrawable)
+        context.renderbufferStorage(GL_RENDERBUFFER.l, fromDrawable: self.layer as! EAGLDrawable)
         glFramebufferRenderbuffer(GL_FRAMEBUFFER.ui, GL_COLOR_ATTACHMENT0.ui, GL_RENDERBUFFER.ui, viewRenderbuffer)
         
         glGetRenderbufferParameteriv(GL_RENDERBUFFER.ui, GL_RENDERBUFFER_WIDTH.ui, &backingWidth)
@@ -314,7 +317,7 @@ class PaintingView: UIView {
         glBlendFunc(GL_ONE.ui, GL_ONE_MINUS_SRC_ALPHA.ui)
         
         // Playback recorded path, which is "Shake Me"
-        var recordedPaths = NSMutableArray(contentsOfFile: NSBundle.mainBundle().pathForResource("Recording", ofType: "data")!)! as NSArray as [NSData]
+        var recordedPaths = NSMutableArray(contentsOfFile: NSBundle.mainBundle().pathForResource("Recording", ofType: "data")!)! as NSArray as! [NSData]
         if recordedPaths.count != 0 {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 200 * NSEC_PER_MSEC.ll), dispatch_get_main_queue()) {
                 self.playback(&recordedPaths)
@@ -342,12 +345,14 @@ class PaintingView: UIView {
         }
         
         // Update projection matrix
-        let projectionMatrix = GLK.Matrix4.MakeOrtho(0, backingWidth.f, 0, backingHeight.f, -1, 1)
-        let modelViewMatrix = GLK.Matrix4.Identity; // this sample uses a constant identity modelView matrix
-        let MVPMatrix = GLK.Matrix4.Multiply(projectionMatrix, modelViewMatrix)
+        let projectionMatrix = GLKMatrix4MakeOrtho(0, backingWidth.f, 0, backingHeight.f, -1, 1)
+        let modelViewMatrix = GLKMatrix4Identity // this sample uses a constant identity modelView matrix
+        var MVPMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix)
         
         glUseProgram(program[PROGRAM_POINT].id)
-        glUniformMatrix4fv(program[PROGRAM_POINT].uniform[UNIFORM_MVP], 1, GL_FALSE.ub, MVPMatrix.m)
+        withUnsafePointer(&MVPMatrix) {ptrMVP in
+            glUniformMatrix4fv(program[PROGRAM_POINT].uniform[UNIFORM_MVP], 1, GL_FALSE.ub, UnsafePointer(ptrMVP))
+        }
         
         // Update viewport
         glViewport(0, 0, backingWidth, backingHeight)
@@ -477,9 +482,9 @@ class PaintingView: UIView {
     
     
     // Handles the start of a touch
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         let bounds = self.bounds
-        let touch = event.touchesForView(self)!.anyObject() as UITouch
+        let touch = event.touchesForView(self)!.first as! UITouch
         firstTouch = true
         // Convert touch point from UIView referential to OpenGL one (upside-down flip)
         location = touch.locationInView(self)
@@ -487,9 +492,9 @@ class PaintingView: UIView {
     }
     
     // Handles the continuation of a touch.
-    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
         let bounds = self.bounds
-        let touch = event.touchesForView(self)!.anyObject() as UITouch
+        let touch = event.touchesForView(self)!.first! as! UITouch
         
         // Convert touch point from UIView referential to OpenGL one (upside-down flip)
         if firstTouch {
@@ -508,9 +513,9 @@ class PaintingView: UIView {
     }
     
     // Handles the end of a touch event when the touch is a tap.
-    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         let bounds = self.bounds
-        let touch = event.touchesForView(self)!.anyObject() as UITouch
+        let touch = event.touchesForView(self)!.first! as! UITouch
         if firstTouch {
             firstTouch = false
             previousLocation = touch.previousLocationInView(self)
@@ -520,7 +525,7 @@ class PaintingView: UIView {
     }
     
     // Handles the end of a touch event.
-    override func touchesCancelled(touches: NSSet!, withEvent event: UIEvent!) {
+    override func touchesCancelled(touches: Set<NSObject>!, withEvent event: UIEvent!) {
         // If appropriate, add code necessary to save the state of the application.
         // This application is not saving state.
     }

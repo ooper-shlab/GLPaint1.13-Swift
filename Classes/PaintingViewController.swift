@@ -114,7 +114,7 @@ class PaintingViewController: UIViewController {
         let components = CGColorGetComponents(color)
         
         // Defer to the OpenGL view to set the brush color
-        (self.view as PaintingView).setBrushColorWithRed(components[0], green: components[1], blue: components[2])
+        (self.view as! PaintingView).setBrushColorWithRed(components[0], green: components[1], blue: components[2])
         
         // Load the sounds
         let mainBundle = NSBundle.mainBundle()
@@ -146,7 +146,7 @@ class PaintingViewController: UIViewController {
         selectSound.play()
         
         // Define a new brush color
-        let senderSegment = sender as UISegmentedControl
+        let senderSegment = sender as! UISegmentedControl
         let color = UIColor(hue: senderSegment.selectedSegmentIndex.g / kPaletteSize.g,
             saturation: kSaturation.g,
             brightness: kBrightness.g,
@@ -154,14 +154,14 @@ class PaintingViewController: UIViewController {
         let components = CGColorGetComponents(color)
         
         // Defer to the OpenGL view to set the brush color
-        (self.view as PaintingView).setBrushColorWithRed(components[0], green: components[1], blue: components[2])
+        (self.view as! PaintingView).setBrushColorWithRed(components[0], green: components[1], blue: components[2])
     }
     
     // Called when receiving the "shake" notification; plays the erase sound and redraws the view
     func eraseView() {
         if CFAbsoluteTimeGetCurrent() > lastTime + kMinEraseInterval {
             erasingSound.play()
-            (self.view as PaintingView).erase()
+            (self.view as! PaintingView).erase()
             lastTime = CFAbsoluteTimeGetCurrent()
         }
     }
