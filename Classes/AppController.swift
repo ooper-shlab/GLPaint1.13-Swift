@@ -58,14 +58,14 @@ import UIKit
 @objc(AppController)
 class AppController: NSObject, UIApplicationDelegate {
     
-    private var window: UIWindow!
+    var window: UIWindow?
     
     func applicationDidFinishLaunching(application: UIApplication) {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
         let controller = PaintingViewController(nibName: "PaintingViewController", bundle: nil)
-        self.window.rootViewController = controller
-        self.window.makeKeyAndVisible()
+        self.window!.rootViewController = controller
+        self.window!.makeKeyAndVisible()
     }
     
 }

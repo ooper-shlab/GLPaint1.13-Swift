@@ -56,6 +56,6 @@ import UIKit
 func glError(file: String = __FILE__, line: Int = __LINE__) {
     let err = glGetError()
     if err != GL_NO_ERROR.ui {
-        println("glError: \(String(err, radix: 16)) caught at \(file):\(line)")
+        print("glError: \(String(err, radix: 16)) caught at \(file):\(line)")
     }
 }

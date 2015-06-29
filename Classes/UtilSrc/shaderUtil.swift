@@ -58,16 +58,16 @@ import OpenGLES
 
 
 private func printf(format: String, args: [CVarArgType]) {
-    print(String(format: format, arguments: args))
+    print(String(format: format, arguments: args), appendNewline: false)
 }
 private func printf(format: String, args: CVarArgType...) {
-    printf(format, args)
+    printf(format, args: args)
 }
 func LogInfo(format: String, args: CVarArgType...) {
-    printf(format, args)
+    printf(format, args: args)
 }
 func LogError(format: String, args: CVarArgType...) {
-    printf(format, args)
+    printf(format, args: args)
 }
 
 
@@ -90,7 +90,7 @@ struct glue {
         if logLength > 0 {
             let log = UnsafeMutablePointer<CChar>.alloc(logLength.l)
             glGetShaderInfoLog(shader, logLength, &logLength, log)
-            LogInfo("Shader compile log:\n%@", String.fromCString(log)!)
+            LogInfo("Shader compile log:\n%@", args: String.fromCString(log)!)
             log.dealloc(logLength.l)
         }
         
@@ -99,7 +99,7 @@ struct glue {
             
             LogError("Failed to compile shader:\n")
             for i in 0..<count.l {
-                LogInfo("%@", String.fromCString(sources[i])!)
+                LogInfo("%@", args: String.fromCString(sources[i])!)
             }
         }
         glError()
@@ -117,13 +117,13 @@ struct glue {
         if logLength > 0 {
             let log = UnsafeMutablePointer<CChar>.alloc(logLength.l)
             glGetProgramInfoLog(program, logLength, &logLength, log)
-            LogInfo("Program link log:\n%@", String.fromCString(log)!)
+            LogInfo("Program link log:\n%@", args: String.fromCString(log)!)
             log.dealloc(logLength.l)
         }
         
         glGetProgramiv(program, GL_LINK_STATUS.ui, &status)
         if status == 0 {
-            LogError("Failed to link program %d", program)
+            LogError("Failed to link program %d", args: program)
         }
         glError()
         
@@ -140,13 +140,13 @@ struct glue {
         if logLength > 0 {
             let log = UnsafeMutablePointer<CChar>.alloc(logLength.l)
             glGetProgramInfoLog(program, logLength, &logLength, log)
-            LogInfo("Program validate log:\n%@", String.fromCString(log)!)
+            LogInfo("Program validate log:\n%@", args: String.fromCString(log)!)
             log.dealloc(logLength.l)
         }
         
         glGetProgramiv(program, GL_VALIDATE_STATUS.ui, &status)
         if status == 0 {
-            LogError("Failed to validate program %d", program)
+            LogError("Failed to validate program %d", args: program)
         }
         glError()
         

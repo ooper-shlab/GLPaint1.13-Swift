@@ -193,7 +193,7 @@ class PaintingView: UIView {
             ]
             
             // auto-assign known attribs
-            for (j, name) in enumerate(attribName) {
+            for (j, name) in attribName.enumerate() {
                 if strstr(UnsafeMutablePointer(vsrc.bytes), name) != nil {
                     attrib.append(GLuint(j))
                     attribUsed.append(name)
@@ -251,7 +251,7 @@ class PaintingView: UIView {
             // Allocate  memory needed for the bitmap context
             var brushData = [GLubyte](count: width * height * 4, repeatedValue: 0)
             // Use  the bitmatp creation function provided by the Core Graphics framework.
-            let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedLast.rawValue)
+            let bitmapInfo = CGImageAlphaInfo.PremultipliedLast.rawValue
             let brushContext = CGBitmapContextCreate(&brushData, width, height, 8, width * 4, CGImageGetColorSpace(brushImage), bitmapInfo)
             // After you create the context, you can draw the  image to the context.
             CGContextDrawImage(brushContext, CGRectMake(0.0, 0.0, width.g, height.g), brushImage)
@@ -482,9 +482,9 @@ class PaintingView: UIView {
     
     
     // Handles the start of a touch
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let bounds = self.bounds
-        let touch = event.touchesForView(self)!.first as! UITouch
+        let touch = event!.touchesForView(self)!.first!
         firstTouch = true
         // Convert touch point from UIView referential to OpenGL one (upside-down flip)
         location = touch.locationInView(self)
@@ -492,9 +492,9 @@ class PaintingView: UIView {
     }
     
     // Handles the continuation of a touch.
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let bounds = self.bounds
-        let touch = event.touchesForView(self)!.first! as! UITouch
+        let touch = event!.touchesForView(self)!.first!
         
         // Convert touch point from UIView referential to OpenGL one (upside-down flip)
         if firstTouch {
@@ -513,9 +513,9 @@ class PaintingView: UIView {
     }
     
     // Handles the end of a touch event when the touch is a tap.
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let bounds = self.bounds
-        let touch = event.touchesForView(self)!.first! as! UITouch
+        let touch = event!.touchesForView(self)!.first!
         if firstTouch {
             firstTouch = false
             previousLocation = touch.previousLocationInView(self)
@@ -525,7 +525,7 @@ class PaintingView: UIView {
     }
     
     // Handles the end of a touch event.
-    override func touchesCancelled(touches: Set<NSObject>!, withEvent event: UIEvent!) {
+    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
         // If appropriate, add code necessary to save the state of the application.
         // This application is not saving state.
     }

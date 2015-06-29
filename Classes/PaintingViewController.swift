@@ -173,7 +173,7 @@ class PaintingViewController: UIViewController {
     
     //MARK: Motion
     
-    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent) {
+    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
         if motion == UIEventSubtype.MotionShake {
             // User was shaking the device. Post a notification named "shake".
             NSNotificationCenter.defaultCenter().postNotificationName("shake", object: self)
