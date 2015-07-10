@@ -134,7 +134,7 @@ class PaintingView: UIView {
     }
     
     // The GL view is stored in the nib file. When it's unarchived it's sent -initWithCoder:
-    required init(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         
         super.init(coder: coder)
         let eaglLayer = self.layer as! CAEAGLLayer
