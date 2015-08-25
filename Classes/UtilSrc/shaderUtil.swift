@@ -58,7 +58,7 @@ import OpenGLES
 
 
 private func printf(format: String, args: [CVarArgType]) {
-    print(String(format: format, arguments: args), appendNewline: false)
+    print(String(format: format, arguments: args), terminator: "")
 }
 private func printf(format: String, args: CVarArgType...) {
     printf(format, args: args)
