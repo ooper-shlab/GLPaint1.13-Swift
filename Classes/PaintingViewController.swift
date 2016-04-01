@@ -96,7 +96,7 @@ class PaintingViewController: UIViewController {
         let frame = CGRectMake(rect.origin.x + kLeftMargin.g, rect.size.height - kPaletteHeight.g - kTopMargin.g, rect.size.width - (kLeftMargin + kRightMargin).g, kPaletteHeight.g)
         segmentedControl.frame = frame
         // When the user chooses a color, the method changeBrushColor: is called.
-        segmentedControl.addTarget(self, action: "changeBrushColor:", forControlEvents: .ValueChanged)
+        segmentedControl.addTarget(self, action: #selector(PaintingViewController.changeBrushColor(_:)), forControlEvents: .ValueChanged)
         // Make sure the color of the color complements the black background
         segmentedControl.tintColor = UIColor.darkGrayColor()
         // Set the third color (index values start at 0)
@@ -123,7 +123,7 @@ class PaintingViewController: UIViewController {
         
         // Erase the view when recieving a notification named "shake" from the NSNotificationCenter object
         // The "shake" nofification is posted by the PaintingWindow object when user shakes the device
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "eraseView", name: "shake", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PaintingViewController.eraseView), name: "shake", object: nil)
     }
     
     override func viewDidAppear(animated: Bool) {

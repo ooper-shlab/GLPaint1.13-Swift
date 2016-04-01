@@ -402,7 +402,7 @@ class PaintingView: UIView {
     }
     
     // Drawings a line onscreen based on where the user touches
-    private func renderLineFromPoint(var start: CGPoint, var toPoint end: CGPoint) {
+    private func renderLineFromPoint(_start: CGPoint, toPoint _end: CGPoint) {
         struct Static {
             static var vertexBuffer: [GLfloat] = []
         }
@@ -413,8 +413,10 @@ class PaintingView: UIView {
         
         // Convert locations from Points to Pixels
         let scale = self.contentScaleFactor
+        var start = _start
         start.x *= scale
         start.y *= scale
+        var end = _end
         end.x *= scale
         end.y *= scale
         
