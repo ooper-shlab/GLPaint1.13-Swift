@@ -66,23 +66,18 @@ class SoundEffect: NSObject {
         super.init()
         
         // Gets the file located at the specified path.
-//        if let aFileURL = NSURL(fileURLWithPath: path) {
-            let aFileURL = NSURL(fileURLWithPath: path)
-            
-            // If the file exists, calls Core Audio to create a system sound ID.
-            var aSoundID: SystemSoundID = 0
-            let error = AudioServicesCreateSystemSoundID(aFileURL, &aSoundID)
-            
-            if error == kAudioServicesNoError {
-                _soundID = aSoundID
-            } else {
-                NSLog("Error %d loading sound at path: %@", error, path)
-                return nil
-            }
-//        } else {
-//            NSLog("NSURL is nil for path: %@", path)
-//            return nil
-//        }
+        let aFileURL = URL(fileURLWithPath: path)
+        
+        // If the file exists, calls Core Audio to create a system sound ID.
+        var aSoundID: SystemSoundID = 0
+        let error = AudioServicesCreateSystemSoundID(aFileURL as CFURL, &aSoundID)
+        
+        if error == kAudioServicesNoError {
+            _soundID = aSoundID
+        } else {
+            NSLog("Error %d loading sound at path: %@", error, path)
+            return nil
+        }
     }
     
     // Releases resouces when no longer needed.

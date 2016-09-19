@@ -60,8 +60,8 @@ class AppController: NSObject, UIApplicationDelegate {
     
     var window: UIWindow?
     
-    func applicationDidFinishLaunching(application: UIApplication) {
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+    func applicationDidFinishLaunching(_ application: UIApplication) {
+        self.window = UIWindow(frame: UIScreen.main.bounds)
         
         let controller = PaintingViewController(nibName: "PaintingViewController", bundle: nil)
         self.window!.rootViewController = controller

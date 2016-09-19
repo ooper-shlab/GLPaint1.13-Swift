@@ -55,11 +55,10 @@
 
 import UIKit
 
-func readDataForResource(name: String, ext: String? = nil) -> NSData {
-    let url = NSBundle.mainBundle().URLForResource(name, withExtension: ext)!
-    let data = NSData(contentsOfURL: url)!
-    let source = NSMutableData(data: data)
-    var trailingNul: CChar = 0
-    source.appendBytes(&trailingNul, length: 1)
+func readData(forResource name: String, withExtension ext: String? = nil) -> Data {
+    let url = Bundle.main.url(forResource: name, withExtension: ext)!
+    var source = try! Data(contentsOf: url)
+    var trailingNul: UInt8 = 0
+    source.append(&trailingNul, count: 1)
     return source
 }

@@ -83,7 +83,7 @@ typealias programInfo_t = (
     id: GLuint)
 
 var program: [programInfo_t] = [
-    ("point.vsh",   "point.fsh", Array(count: NUM_UNIFORMS, repeatedValue: 0), 0),     // PROGRAM_POINT
+    ("point.vsh",   "point.fsh", Array(repeating: 0, count: NUM_UNIFORMS), 0),     // PROGRAM_POINT
 ]
 let NUM_PROGRAMS = program.count
 
@@ -129,7 +129,7 @@ class PaintingView: UIView {
     
     // Implement this to override the default layer class (which is [CALayer class]).
     // We do this so that our view will be backed by a layer that is capable of OpenGL ES rendering.
-    override class func layerClass() -> AnyClass {
+    override class var layerClass : AnyClass {
         return CAEAGLLayer.self
     }
     
@@ -139,21 +139,21 @@ class PaintingView: UIView {
         super.init(coder: coder)
         let eaglLayer = self.layer as! CAEAGLLayer
         
-        eaglLayer.opaque = true
+        eaglLayer.isOpaque = true
         // In this application, we want to retain the EAGLDrawable contents after a call to presentRenderbuffer.
         eaglLayer.drawableProperties = [
             kEAGLDrawablePropertyRetainedBacking: true,
             kEAGLDrawablePropertyColorFormat: kEAGLColorFormatRGBA8
         ]
         
-        context = EAGLContext(API: .OpenGLES2)
+        context = EAGLContext(api: .openGLES2)
         
-        if context == nil || !EAGLContext.setCurrentContext(context) {
+        if context == nil || !EAGLContext.setCurrent(context) {
             fatalError("EAGLContext cannot be created")
         }
         
         // Set the view's scale factor as you wish
-        self.contentScaleFactor = UIScreen.mainScreen().scale
+        self.contentScaleFactor = UIScreen.main.scale
         
         // Make sure to start with a cleared buffer
         needsErase = true
@@ -164,12 +164,12 @@ class PaintingView: UIView {
     // This is the perfect opportunity to also update the framebuffer so that it is
     // the same size as our display area.
     override func layoutSubviews() {
-        EAGLContext.setCurrentContext(context)
+        EAGLContext.setCurrent(context)
         
         if !initialized {
             initialized = self.initGL()
         } else {
-            self.resizeFromLayer(self.layer as! CAEAGLLayer)
+            self.resize(from: self.layer as! CAEAGLLayer)
         }
         
         // Clear the framebuffer the first time it is allocated
@@ -181,30 +181,35 @@ class PaintingView: UIView {
     
     private func setupShaders() {
         for i in 0..<NUM_PROGRAMS {
-            let vsrc = readDataForResource(program[i].vert)
-            let fsrc = readDataForResource(program[i].frag)
+            let vsrc = readData(forResource: program[i].vert)
+            let fsrc = readData(forResource: program[i].frag)
             var attribUsed: [String] = []
             var attrib: [GLuint] = []
             let attribName: [String] = [
                 "inVertex",
-            ]
+                ]
             let uniformName: [String] = [
                 "MVP", "pointSize", "vertexColor", "texture",
-            ]
-            
-            // auto-assign known attribs
-            for (j, name) in attribName.enumerate() {
-                if strstr(UnsafeMutablePointer(vsrc.bytes), name) != nil {
-                    attrib.append(GLuint(j))
-                    attribUsed.append(name)
-                }
-            }
+                ]
             
             var prog: GLuint = 0
-            glue.createProgram(UnsafeMutablePointer(vsrc.bytes), UnsafeMutablePointer(fsrc.bytes),
-                attribUsed, attrib,
-                uniformName, &program[i].uniform,
-                &prog)
+            vsrc.withUnsafeBytes {(vsrcChars: UnsafePointer<GLchar>) in
+                
+                // auto-assign known attribs
+                for (j, name) in attribName.enumerated() {
+                    if strstr(vsrcChars, name) != nil {
+                        attrib.append(j.ui)
+                        attribUsed.append(name)
+                    }
+                }
+                
+                fsrc.withUnsafeBytes {(fsrcChars: UnsafePointer<GLchar>) in
+                    _ = glue.createProgram(UnsafeMutablePointer(mutating: vsrcChars), UnsafeMutablePointer(mutating: fsrcChars),
+                                           attribUsed, attrib,
+                                           uniformName, &program[i].uniform,
+                                           &prog)
+                }
+            }
             program[i].id = prog
             
             // Set constant/initalize uniforms
@@ -219,8 +224,10 @@ class PaintingView: UIView {
                 let modelViewMatrix = GLKMatrix4Identity
                 var MVPMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix)
                 
-                withUnsafePointer(&MVPMatrix) {ptrMVP in
-                    glUniformMatrix4fv(program[PROGRAM_POINT].uniform[UNIFORM_MVP], 1, GL_FALSE.ub, UnsafePointer(ptrMVP))
+                withUnsafePointer(to: &MVPMatrix) {ptrMVP in
+                    ptrMVP.withMemoryRebound(to: GLfloat.self, capacity: 16) {ptrGLfloat in
+                        glUniformMatrix4fv(program[PROGRAM_POINT].uniform[UNIFORM_MVP], 1, GL_FALSE.ub, ptrGLfloat)
+                    }
                 }
                 
                 // point size
@@ -235,26 +242,26 @@ class PaintingView: UIView {
     }
     
     // Create a texture from an image
-    private func textureFromName(name: String) -> textureInfo_t {
+    private func texture(fromName name: String) -> textureInfo_t {
         var texId: GLuint = 0
         var texture: textureInfo_t = (0, 0, 0)
         
         // First create a UIImage object from the data in a image file, and then extract the Core Graphics image
-        let brushImage = UIImage(named: name)?.CGImage
+        let brushImage = UIImage(named: name)?.cgImage
         
         // Get the width and height of the image
-        let width: size_t = CGImageGetWidth(brushImage)
-        let height: size_t = CGImageGetHeight(brushImage)
+        let width: size_t = brushImage!.width
+        let height: size_t = brushImage!.height
         
         // Make sure the image exists
         if brushImage != nil {
             // Allocate  memory needed for the bitmap context
-            var brushData = [GLubyte](count: width * height * 4, repeatedValue: 0)
+            var brushData = [GLubyte](repeating: 0, count: width * height * 4)
             // Use  the bitmatp creation function provided by the Core Graphics framework.
-            let bitmapInfo = CGImageAlphaInfo.PremultipliedLast.rawValue
-            let brushContext = CGBitmapContextCreate(&brushData, width, height, 8, width * 4, CGImageGetColorSpace(brushImage), bitmapInfo)
+            let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue
+            let brushContext = CGContext(data: &brushData, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4, space: (brushImage?.colorSpace!)!, bitmapInfo: bitmapInfo)
             // After you create the context, you can draw the  image to the context.
-            CGContextDrawImage(brushContext, CGRectMake(0.0, 0.0, width.g, height.g), brushImage)
+            brushContext?.draw(brushImage!, in: CGRect(x: 0.0, y: 0.0, width: width.g, height: height.g))
             // You don't need the context at this point, so you need to release it to avoid memory leaks.
             // Use OpenGL ES to generate a name for the texture.
             glGenTextures(1, &texId)
@@ -283,7 +290,7 @@ class PaintingView: UIView {
         glBindRenderbuffer(GL_RENDERBUFFER.ui, viewRenderbuffer)
         // This call associates the storage for the current render buffer with the EAGLDrawable (our CAEAGLLayer)
         // allowing us to draw into a buffer that will later be rendered to screen wherever the layer is (which corresponds with our view).
-        context.renderbufferStorage(GL_RENDERBUFFER.l, fromDrawable: self.layer as! EAGLDrawable)
+        context.renderbufferStorage(GL_RENDERBUFFER.l, from: self.layer as! EAGLDrawable)
         glFramebufferRenderbuffer(GL_FRAMEBUFFER.ui, GL_COLOR_ATTACHMENT0.ui, GL_RENDERBUFFER.ui, viewRenderbuffer)
         
         glGetRenderbufferParameteriv(GL_RENDERBUFFER.ui, GL_RENDERBUFFER_WIDTH.ui, &backingWidth)
@@ -307,7 +314,7 @@ class PaintingView: UIView {
         glGenBuffers(1, &vboId)
         
         // Load the brush texture
-        brushTexture = self.textureFromName("Particle.png")
+        brushTexture = self.texture(fromName: "Particle.png")
         
         // Load shaders
         self.setupShaders()
@@ -317,20 +324,21 @@ class PaintingView: UIView {
         glBlendFunc(GL_ONE.ui, GL_ONE_MINUS_SRC_ALPHA.ui)
         
         // Playback recorded path, which is "Shake Me"
-        var recordedPaths = NSMutableArray(contentsOfFile: NSBundle.mainBundle().pathForResource("Recording", ofType: "data")!)! as NSArray as! [NSData]
+        let recordedPaths = NSArray(contentsOfFile: Bundle.main.path(forResource: "Recording", ofType: "data")!)! as! [Data]
         if recordedPaths.count != 0 {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 200 * NSEC_PER_MSEC.ll), dispatch_get_main_queue()) {
-                self.playback(&recordedPaths)
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 200 * NSEC_PER_MSEC.d / NSEC_PER_SEC.d) {
+                self.playback(recordedPaths, fromIndex: 0)
             }
         }
         
         return true
     }
     
-    private func resizeFromLayer(layer: CAEAGLLayer) -> Bool {
+    @discardableResult
+    private func resize(from layer: CAEAGLLayer) -> Bool {
         // Allocate color buffer backing based on the current layer size
         glBindRenderbuffer(GL_RENDERBUFFER.ui, viewRenderbuffer)
-        context.renderbufferStorage(GL_RENDERBUFFER.l, fromDrawable: layer)
+        context.renderbufferStorage(GL_RENDERBUFFER.l, from: layer)
         glGetRenderbufferParameteriv(GL_RENDERBUFFER.ui, GL_RENDERBUFFER_WIDTH.ui, &backingWidth)
         glGetRenderbufferParameteriv(GL_RENDERBUFFER.ui, GL_RENDERBUFFER_HEIGHT.ui, &backingHeight)
         
@@ -350,8 +358,10 @@ class PaintingView: UIView {
         var MVPMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix)
         
         glUseProgram(program[PROGRAM_POINT].id)
-        withUnsafePointer(&MVPMatrix) {ptrMVP in
-            glUniformMatrix4fv(program[PROGRAM_POINT].uniform[UNIFORM_MVP], 1, GL_FALSE.ub, UnsafePointer(ptrMVP))
+        withUnsafePointer(to: &MVPMatrix) {ptrMVP in
+            ptrMVP.withMemoryRebound(to: GLfloat.self, capacity: 16) {ptrGLfloat in
+                glUniformMatrix4fv(program[PROGRAM_POINT].uniform[UNIFORM_MVP], 1, GL_FALSE.ub, ptrGLfloat)
+            }
         }
         
         // Update viewport
@@ -382,14 +392,14 @@ class PaintingView: UIView {
         }
         
         // tear down context
-        if EAGLContext.currentContext() === context {
-            EAGLContext.setCurrentContext(context)
+        if EAGLContext.current() === context {
+            EAGLContext.setCurrent(context)
         }
     }
     
     // Erases the screen
     func erase() {
-        EAGLContext.setCurrentContext(context)
+        EAGLContext.setCurrent(context)
         
         // Clear the buffer
         glBindFramebuffer(GL_FRAMEBUFFER.ui, viewFramebuffer)
@@ -402,13 +412,13 @@ class PaintingView: UIView {
     }
     
     // Drawings a line onscreen based on where the user touches
-    private func renderLineFromPoint(_start: CGPoint, toPoint _end: CGPoint) {
+    private func renderLine(from _start: CGPoint, to _end: CGPoint) {
         struct Static {
             static var vertexBuffer: [GLfloat] = []
         }
         var count = 0
         
-        EAGLContext.setCurrentContext(context)
+        EAGLContext.setCurrent(context)
         glBindFramebuffer(GL_FRAMEBUFFER.ui, viewFramebuffer)
         
         // Convert locations from Points to Pixels
@@ -425,7 +435,7 @@ class PaintingView: UIView {
         // Add points to the buffer so there are drawing points every X pixels
         count = max(Int(ceilf(sqrtf((end.x - start.x).f * (end.x - start.x).f + (end.y - start.y).f * (end.y - start.y).f) / kBrushPixelStep.f)), 1)
         Static.vertexBuffer.reserveCapacity(count * 2)
-        Static.vertexBuffer.removeAll(keepCapacity: true)
+        Static.vertexBuffer.removeAll(keepingCapacity: true)
         for i in 0..<count {
             
             Static.vertexBuffer.append(start.x.f + (end.x - start.x).f * (i.f / count.f))
@@ -434,7 +444,7 @@ class PaintingView: UIView {
         
         // Load data to the Vertex Buffer Object
         glBindBuffer(GL_ARRAY_BUFFER.ui, vboId)
-        glBufferData(GL_ARRAY_BUFFER.ui, count*2*sizeof(GLfloat), Static.vertexBuffer, GL_DYNAMIC_DRAW.ui)
+        glBufferData(GL_ARRAY_BUFFER.ui, count*2*MemoryLayout<GLfloat>.size, Static.vertexBuffer, GL_DYNAMIC_DRAW.ui)
         
         glEnableVertexAttribArray(ATTRIB_VERTEX.ui)
         glVertexAttribPointer(ATTRIB_VERTEX.ui, 2, GL_FLOAT.ui, GL_FALSE.ub, 0, nil)
@@ -450,89 +460,88 @@ class PaintingView: UIView {
     
     // Reads previously recorded points and draws them onscreen. This is the Shake Me message that appears when the application launches.
     
-    private func playback(inout recordedPaths: [NSData]) {
+    private func playback(_ recordedPaths: [Data], fromIndex index: Int) {
         // NOTE: Recording.data is stored with 32-bit floats
         // To make it work on both 32-bit and 64-bit devices, we make sure we read back 32 bits each time.
         
-        var x: Float32 = 0, y: Float32 = 0
-        
-        let data = recordedPaths[0]
-        let count = data.length / (sizeof(Float32)*2) // each point contains 64 bits (32-bit x and 32-bit y)
+        let data = recordedPaths[index]
+        let count = data.count / (MemoryLayout<Float32>.size*2) // each point contains 64 bits (32-bit x and 32-bit y)
         
         // Render the current path
-        for i in 0..<count - 1 {
-            
-            data.getBytes(&x, range: NSMakeRange(8*i, sizeof(Float32)))
-            data.getBytes(&y, range: NSMakeRange(8*i+sizeof(Float32), sizeof(Float32)))
-            let point1 = CGPointMake(x.g, y.g)
-            
-            data.getBytes(&x, range: NSMakeRange(8*(i+1), sizeof(Float32)))
-            data.getBytes(&y, range: NSMakeRange(8*(i+1)+sizeof(Float32), sizeof(Float32)))
-            let point2 = CGPointMake(x.g, y.g)
-            
-            self.renderLineFromPoint(point1, toPoint: point2)
+        data.withUnsafeBytes { (floats: UnsafePointer<Float32>) in
+            for i in 0..<count - 1 {
+                
+                var x = floats[2*i]
+                var y = floats[2*i+1]
+                let point1 = CGPoint(x: x.g, y: y.g)
+                
+                x = floats[2*(i+1)]
+                y = floats[2*(i+1)+1]
+                let point2 = CGPoint(x: x.g, y: y.g)
+                
+                self.renderLine(from: point1, to: point2)
+            }
         }
         
         // Render the next path after a short delay
-        recordedPaths.removeAtIndex(0)
-        if recordedPaths.count != 0 {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_MSEC.ll), dispatch_get_main_queue()) {
-                self.playback(&recordedPaths)
+        if recordedPaths.count > index+1 {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10 * NSEC_PER_MSEC.d / NSEC_PER_SEC.d) {
+                self.playback(recordedPaths, fromIndex: index+1)
             }
         }
     }
     
     
     // Handles the start of a touch
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let bounds = self.bounds
-        let touch = event!.touchesForView(self)!.first!
+        let touch = event!.touches(for: self)!.first!
         firstTouch = true
         // Convert touch point from UIView referential to OpenGL one (upside-down flip)
-        location = touch.locationInView(self)
+        location = touch.location(in: self)
         location.y = bounds.size.height - location.y
     }
     
     // Handles the continuation of a touch.
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let bounds = self.bounds
-        let touch = event!.touchesForView(self)!.first!
+        let touch = event!.touches(for: self)!.first!
         
         // Convert touch point from UIView referential to OpenGL one (upside-down flip)
         if firstTouch {
             firstTouch = false
-            previousLocation = touch.previousLocationInView(self)
+            previousLocation = touch.previousLocation(in: self)
             previousLocation.y = bounds.size.height - previousLocation.y
         } else {
-            location = touch.locationInView(self)
+            location = touch.location(in: self)
             location.y = bounds.size.height - location.y
-            previousLocation = touch.previousLocationInView(self)
+            previousLocation = touch.previousLocation(in: self)
             previousLocation.y = bounds.size.height - previousLocation.y
         }
         
         // Render the stroke
-        self.renderLineFromPoint(previousLocation, toPoint: location)
+        self.renderLine(from: previousLocation, to: location)
     }
     
     // Handles the end of a touch event when the touch is a tap.
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         let bounds = self.bounds
-        let touch = event!.touchesForView(self)!.first!
+        let touch = event!.touches(for: self)!.first!
         if firstTouch {
             firstTouch = false
-            previousLocation = touch.previousLocationInView(self)
+            previousLocation = touch.previousLocation(in: self)
             previousLocation.y = bounds.size.height - previousLocation.y
-            self.renderLineFromPoint(previousLocation, toPoint: location)
+            self.renderLine(from: previousLocation, to: location)
         }
     }
     
     // Handles the end of a touch event.
-    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         // If appropriate, add code necessary to save the state of the application.
         // This application is not saving state.
     }
     
-    func setBrushColorWithRed(red: CGFloat, green: CGFloat, blue: CGFloat) {
+    func setBrushColor(red: CGFloat, green: CGFloat, blue: CGFloat) {
         // Update the brush color
         brushColor[0] = red.f * kBrushOpacity.f
         brushColor[1] = green.f * kBrushOpacity.f
@@ -546,7 +555,7 @@ class PaintingView: UIView {
     }
     
     
-    override func canBecomeFirstResponder() -> Bool {
+    override var canBecomeFirstResponder : Bool {
         return true
     }
     

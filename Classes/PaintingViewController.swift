@@ -69,6 +69,10 @@ let kLeftMargin =	10.0
 let kTopMargin =	10.0
 let kRightMargin =      10.0
 
+extension Notification.Name {
+    static let shake = Notification.Name(rawValue: "shake")
+}
+
 //CLASS IMPLEMENTATIONS:
 
 @objc(PaintingViewController)
@@ -84,21 +88,21 @@ class PaintingViewController: UIViewController {
         // Create the UIImages with the UIImageRenderingModeAlwaysOriginal rendering mode. This allows us to show the actual image colors in the segmented control.
         let segmentedControl = UISegmentedControl(items: [
             
-            UIImage(named: "Red")!.imageWithRenderingMode(.AlwaysOriginal),
-            UIImage(named: "Yellow")!.imageWithRenderingMode(.AlwaysOriginal),
-            UIImage(named: "Green")!.imageWithRenderingMode(.AlwaysOriginal),
-            UIImage(named: "Blue")!.imageWithRenderingMode(.AlwaysOriginal),
-            UIImage(named: "Purple")!.imageWithRenderingMode(.AlwaysOriginal),
+            UIImage(named: "Red")!.withRenderingMode(.alwaysOriginal),
+            UIImage(named: "Yellow")!.withRenderingMode(.alwaysOriginal),
+            UIImage(named: "Green")!.withRenderingMode(.alwaysOriginal),
+            UIImage(named: "Blue")!.withRenderingMode(.alwaysOriginal),
+            UIImage(named: "Purple")!.withRenderingMode(.alwaysOriginal),
             ])
         
         // Compute a rectangle that is positioned correctly for the segmented control you'll use as a brush color palette
-        let rect = UIScreen.mainScreen().bounds
-        let frame = CGRectMake(rect.origin.x + kLeftMargin.g, rect.size.height - kPaletteHeight.g - kTopMargin.g, rect.size.width - (kLeftMargin + kRightMargin).g, kPaletteHeight.g)
+        let rect = UIScreen.main.bounds
+        let frame = CGRect(x: rect.origin.x + kLeftMargin.g, y: rect.size.height - kPaletteHeight.g - kTopMargin.g, width: rect.size.width - (kLeftMargin + kRightMargin).g, height: kPaletteHeight.g)
         segmentedControl.frame = frame
         // When the user chooses a color, the method changeBrushColor: is called.
-        segmentedControl.addTarget(self, action: #selector(PaintingViewController.changeBrushColor(_:)), forControlEvents: .ValueChanged)
+        segmentedControl.addTarget(self, action: #selector(PaintingViewController.changeBrushColor(_:)), for: .valueChanged)
         // Make sure the color of the color complements the black background
-        segmentedControl.tintColor = UIColor.darkGrayColor()
+        segmentedControl.tintColor = UIColor.darkGray
         // Set the third color (index values start at 0)
         segmentedControl.selectedSegmentIndex = 2
         
@@ -110,38 +114,41 @@ class PaintingViewController: UIViewController {
         let color = UIColor(hue: 2.0.g / kPaletteSize.g,
             saturation: kSaturation.g,
             brightness: kBrightness.g,
-            alpha: 1.0).CGColor
-        let components = CGColorGetComponents(color)
+            alpha: 1.0).cgColor
+        if let components = color.components {
         
         // Defer to the OpenGL view to set the brush color
-        (self.view as! PaintingView).setBrushColorWithRed(components[0], green: components[1], blue: components[2])
+            (self.view as! PaintingView).setBrushColor(red: components[0], green: components[1], blue: components[2])
+        } else {
+            print("CGColor.components unavailable")
+        }
         
         // Load the sounds
-        let mainBundle = NSBundle.mainBundle()
-        erasingSound = SoundEffect(contentsOfFile: mainBundle.pathForResource("Erase", ofType: "caf")!)!
-        selectSound = SoundEffect(contentsOfFile: mainBundle.pathForResource("Select", ofType: "caf")!)!
+        let mainBundle = Bundle.main
+        erasingSound = SoundEffect(contentsOfFile: mainBundle.path(forResource: "Erase", ofType: "caf")!)!
+        selectSound = SoundEffect(contentsOfFile: mainBundle.path(forResource: "Select", ofType: "caf")!)!
         
         // Erase the view when recieving a notification named "shake" from the NSNotificationCenter object
         // The "shake" nofification is posted by the PaintingWindow object when user shakes the device
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PaintingViewController.eraseView), name: "shake", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PaintingViewController.eraseView), name: .shake, object: nil)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.becomeFirstResponder()
     }
     
-    override func canBecomeFirstResponder() -> Bool {
+    override var canBecomeFirstResponder : Bool {
         return true
     }
     
     // Release resources when they are no longer needed,
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     // Change the brush color
-    func changeBrushColor(sender: AnyObject) {
+    func changeBrushColor(_ sender: AnyObject) {
         // Play sound
         selectSound.play()
         
@@ -150,11 +157,14 @@ class PaintingViewController: UIViewController {
         let color = UIColor(hue: senderSegment.selectedSegmentIndex.g / kPaletteSize.g,
             saturation: kSaturation.g,
             brightness: kBrightness.g,
-            alpha: 1.0).CGColor
-        let components = CGColorGetComponents(color)
+            alpha: 1.0).cgColor
+        if let components = color.components {
         
         // Defer to the OpenGL view to set the brush color
-        (self.view as! PaintingView).setBrushColorWithRed(components[0], green: components[1], blue: components[2])
+            (self.view as! PaintingView).setBrushColor(red: components[0], green: components[1], blue: components[2])
+        } else {
+            print("CGColor.components unavailable")
+        }
     }
     
     // Called when receiving the "shake" notification; plays the erase sound and redraws the view
@@ -167,16 +177,16 @@ class PaintingViewController: UIViewController {
     }
     
     // We do not support auto-rotation in this sample
-    override func shouldAutorotate() -> Bool {
+    override var shouldAutorotate : Bool {
         return false
     }
     
     //MARK: Motion
     
-    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
-        if motion == UIEventSubtype.MotionShake {
+    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+        if motion == UIEventSubtype.motionShake {
             // User was shaking the device. Post a notification named "shake".
-            NSNotificationCenter.defaultCenter().postNotificationName("shake", object: self)
+            NotificationCenter.default.post(name: .shake, object: self)
         }
     }
     
