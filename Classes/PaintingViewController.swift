@@ -60,13 +60,13 @@ import UIKit
 let kBrightness =       1.0
 let kSaturation =       0.45
 
-let kPaletteHeight =	30
-let kPaletteSize =	5
-let kMinEraseInterval =	0.5
+let kPaletteHeight =    30
+let kPaletteSize =    5
+let kMinEraseInterval =    0.5
 
 // Padding for margins
-let kLeftMargin =	10.0
-let kTopMargin =	10.0
+let kLeftMargin =    10.0
+let kTopMargin =    10.0
 let kRightMargin =      10.0
 
 extension Notification.Name {
@@ -148,12 +148,11 @@ class PaintingViewController: UIViewController {
     }
     
     // Change the brush color
-    func changeBrushColor(_ sender: AnyObject) {
+    @objc func changeBrushColor(_ senderSegment: UISegmentedControl) {
         // Play sound
         selectSound.play()
         
         // Define a new brush color
-        let senderSegment = sender as! UISegmentedControl
         let color = UIColor(hue: senderSegment.selectedSegmentIndex.g / kPaletteSize.g,
             saturation: kSaturation.g,
             brightness: kBrightness.g,
@@ -168,7 +167,7 @@ class PaintingViewController: UIViewController {
     }
     
     // Called when receiving the "shake" notification; plays the erase sound and redraws the view
-    func eraseView() {
+    @objc func eraseView() {
         if CFAbsoluteTimeGetCurrent() > lastTime + kMinEraseInterval {
             erasingSound.play()
             (self.view as! PaintingView).erase()

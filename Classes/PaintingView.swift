@@ -290,7 +290,7 @@ class PaintingView: UIView {
         glBindRenderbuffer(GL_RENDERBUFFER.ui, viewRenderbuffer)
         // This call associates the storage for the current render buffer with the EAGLDrawable (our CAEAGLLayer)
         // allowing us to draw into a buffer that will later be rendered to screen wherever the layer is (which corresponds with our view).
-        context.renderbufferStorage(GL_RENDERBUFFER.l, from: self.layer as! EAGLDrawable)
+        context.renderbufferStorage(GL_RENDERBUFFER.l, from: (self.layer as! EAGLDrawable))
         glFramebufferRenderbuffer(GL_FRAMEBUFFER.ui, GL_COLOR_ATTACHMENT0.ui, GL_RENDERBUFFER.ui, viewRenderbuffer)
         
         glGetRenderbufferParameteriv(GL_RENDERBUFFER.ui, GL_RENDERBUFFER_WIDTH.ui, &backingWidth)
