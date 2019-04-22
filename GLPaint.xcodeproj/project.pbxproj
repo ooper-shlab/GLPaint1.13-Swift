@@ -13,7 +13,6 @@
 		1BBE306E0DD273B90012773B /* Purple.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BBE30690DD273B90012773B /* Purple.png */; };
 		1BBE306F0DD273B90012773B /* Red.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BBE306A0DD273B90012773B /* Red.png */; };
 		1BBE30700DD273B90012773B /* Yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BBE306B0DD273B90012773B /* Yellow.png */; };
-		1BD0B6AB0DDCA9B800E538F8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BD0B6AA0DDCA9B800E538F8 /* Default.png */; };
 		1D3623EC0D0F72F000981E51 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -25,7 +24,6 @@
 		2D500C820D5A7DAE00DBA0E3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D500C810D5A7DAE00DBA0E3 /* AudioToolbox.framework */; };
 		AF7492AB1728A9E50013253B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7492A91728A9E50013253B /* MainWindow.xib */; };
 		AF7E20421728A2C600728423 /* PaintingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7E203F1728A2C600728423 /* PaintingViewController.xib */; };
-		AF877F8617271F57002D08B8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AF877F8517271F57002D08B8 /* Default-568h@2x.png */; };
 		AF877F9117272B68002D08B8 /* point.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AF877F8F17272B68002D08B8 /* point.fsh */; };
 		AF877F9217272B68002D08B8 /* point.vsh in Resources */ = {isa = PBXBuildFile; fileRef = AF877F9017272B68002D08B8 /* point.vsh */; };
 		AF877F9417272C2F002D08B8 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF877F9317272C2F002D08B8 /* GLKit.framework */; };
@@ -36,6 +34,7 @@
 		AFCEBA2511D96215001AA22A /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = AFCEBA1E11D96215001AA22A /* Icon.png */; };
 		AFCEBA2611D96215001AA22A /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AFCEBA1F11D96215001AA22A /* Icon@2x.png */; };
 		AFCEBA2711D96215001AA22A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = AFCEBA2011D96215001AA22A /* iTunesArtwork */; };
+		D7A0FDC3226D964900D53FA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7A0FDC2226D964900D53FA1 /* LaunchScreen.storyboard */; };
 		D7AE538B1A8645390085AA3B /* NumTypes+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AE53891A8645390085AA3B /* NumTypes+Conversion.swift */; };
 		D7B915861A767513002949C6 /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B915821A767513002949C6 /* AppController.swift */; };
 		D7B915871A767513002949C6 /* PaintingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B915831A767513002949C6 /* PaintingView.swift */; };
@@ -53,7 +52,6 @@
 		1BBE30690DD273B90012773B /* Purple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Purple.png; path = Images/Purple.png; sourceTree = "<group>"; };
 		1BBE306A0DD273B90012773B /* Red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Red.png; path = Images/Red.png; sourceTree = "<group>"; };
 		1BBE306B0DD273B90012773B /* Yellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Yellow.png; path = Images/Yellow.png; sourceTree = "<group>"; };
-		1BD0B6AA0DDCA9B800E538F8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		1BEB7DB40DA5967E00271C96 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -66,9 +64,6 @@
 		2D500B990D5A79CF00DBA0E3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		2D500C810D5A7DAE00DBA0E3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* GLPaint-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GLPaint-Info.plist"; sourceTree = "<group>"; };
-		AF7492AA1728A9E50013253B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		AF7E20401728A2C600728423 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PaintingViewController.xib; sourceTree = "<group>"; };
-		AF877F8517271F57002D08B8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		AF877F8F17272B68002D08B8 /* point.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = point.fsh; sourceTree = "<group>"; };
 		AF877F9017272B68002D08B8 /* point.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = point.vsh; sourceTree = "<group>"; };
 		AF877F9317272C2F002D08B8 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
@@ -79,6 +74,7 @@
 		AFCEBA1E11D96215001AA22A /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = Images/Icon.png; sourceTree = "<group>"; };
 		AFCEBA1F11D96215001AA22A /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images/Icon@2x.png"; sourceTree = "<group>"; };
 		AFCEBA2011D96215001AA22A /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = Images/iTunesArtwork; sourceTree = "<group>"; };
+		D7A0FDC2226D964900D53FA1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D7AE53871A8644770085AA3B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D7AE53891A8645390085AA3B /* NumTypes+Conversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NumTypes+Conversion.swift"; path = "Classes/OOPUtils/NumTypes+Conversion.swift"; sourceTree = "<group>"; };
 		D7B915821A767513002949C6 /* AppController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppController.swift; path = Classes/AppController.swift; sourceTree = "<group>"; };
@@ -88,6 +84,8 @@
 		D7B9158A1A767532002949C6 /* debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = debug.swift; path = Classes/UtilSrc/debug.swift; sourceTree = "<group>"; };
 		D7B9158B1A767532002949C6 /* fileUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = fileUtil.swift; path = Classes/UtilSrc/fileUtil.swift; sourceTree = "<group>"; };
 		D7B9158E1A767532002949C6 /* shaderUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = shaderUtil.swift; path = Classes/UtilSrc/shaderUtil.swift; sourceTree = "<group>"; };
+		D7BE0FDC226D91A20036E5D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		D7BE0FDD226D91A30036E5D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PaintingViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +145,7 @@
 			children = (
 				AF7492A91728A9E50013253B /* MainWindow.xib */,
 				AF7E203F1728A2C600728423 /* PaintingViewController.xib */,
+				D7A0FDC2226D964900D53FA1 /* LaunchScreen.storyboard */,
 				AFCEBA1D11D96215001AA22A /* Icon-Small@2x.png */,
 				AFCEBA1A11D96215001AA22A /* Icon-72.png */,
 				AFCEBA1B11D96215001AA22A /* Icon-Small-50.png */,
@@ -155,8 +154,6 @@
 				AFCEBA1F11D96215001AA22A /* Icon@2x.png */,
 				AFCEBA2011D96215001AA22A /* iTunesArtwork */,
 				1B612B1E0DDCF277003A5CC7 /* Particle.png */,
-				1BD0B6AA0DDCA9B800E538F8 /* Default.png */,
-				AF877F8517271F57002D08B8 /* Default-568h@2x.png */,
 				28F25BBF0D64BF0B00158CCD /* Recording.data */,
 				28F25BC00D64BF0B00158CCD /* Select.caf */,
 				28F25BC10D64BF0B00158CCD /* Erase.caf */,
@@ -231,19 +228,20 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 1020;
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "GLPaint" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -267,7 +265,6 @@
 				1BBE306E0DD273B90012773B /* Purple.png in Resources */,
 				1BBE306F0DD273B90012773B /* Red.png in Resources */,
 				1BBE30700DD273B90012773B /* Yellow.png in Resources */,
-				1BD0B6AB0DDCA9B800E538F8 /* Default.png in Resources */,
 				1B612B1F0DDCF277003A5CC7 /* Particle.png in Resources */,
 				AFCEBA2111D96215001AA22A /* Icon-72.png in Resources */,
 				AFCEBA2211D96215001AA22A /* Icon-Small-50.png in Resources */,
@@ -276,9 +273,9 @@
 				AFCEBA2511D96215001AA22A /* Icon.png in Resources */,
 				AFCEBA2611D96215001AA22A /* Icon@2x.png in Resources */,
 				AFCEBA2711D96215001AA22A /* iTunesArtwork in Resources */,
-				AF877F8617271F57002D08B8 /* Default-568h@2x.png in Resources */,
 				AF877F9117272B68002D08B8 /* point.fsh in Resources */,
 				AF877F9217272B68002D08B8 /* point.vsh in Resources */,
+				D7A0FDC3226D964900D53FA1 /* LaunchScreen.storyboard in Resources */,
 				AF7E20421728A2C600728423 /* PaintingViewController.xib in Resources */,
 				AF7492AB1728A9E50013253B /* MainWindow.xib in Resources */,
 			);
@@ -308,7 +305,7 @@
 		AF7492A91728A9E50013253B /* MainWindow.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				AF7492AA1728A9E50013253B /* en */,
+				D7BE0FDC226D91A20036E5D0 /* Base */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";
@@ -316,7 +313,7 @@
 		AF7E203F1728A2C600728423 /* PaintingViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				AF7E20401728A2C600728423 /* en */,
+				D7BE0FDD226D91A30036E5D0 /* Base */,
 			);
 			name = PaintingViewController.xib;
 			sourceTree = "<group>";
@@ -344,9 +341,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = GLPaint;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 4.0;
-				VALID_ARCHS = "armv7 armv7s arm64";
+				SWIFT_VERSION = 5.0;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Debug;
@@ -365,12 +360,10 @@
 				INFOPLIST_FILE = "GLPaint-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = GLPaint;
-				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 4.0;
-				VALID_ARCHS = "armv7 armv7s arm64";
+				SWIFT_VERSION = 5.0;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Release;
@@ -379,15 +372,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
@@ -416,15 +412,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;

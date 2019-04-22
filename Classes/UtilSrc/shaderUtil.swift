@@ -91,7 +91,7 @@ struct glue {
             let log = UnsafeMutablePointer<CChar>.allocate(capacity: logLength.l)
             glGetShaderInfoLog(shader, logLength, &logLength, log)
             LogInfo("Shader compile log:\n%@", args: String(cString: log))
-            log.deallocate(capacity: logLength.l)
+            log.deallocate()
         }
         
         glGetShaderiv(shader, GL_COMPILE_STATUS.ui, &status)
@@ -118,7 +118,7 @@ struct glue {
             let log = UnsafeMutablePointer<CChar>.allocate(capacity: logLength.l)
             glGetProgramInfoLog(program, logLength, &logLength, log)
             LogInfo("Program link log:\n%@", args: String(cString: log))
-            log.deallocate(capacity: logLength.l)
+            log.deallocate()
         }
         
         glGetProgramiv(program, GL_LINK_STATUS.ui, &status)
@@ -141,7 +141,7 @@ struct glue {
             let log = UnsafeMutablePointer<CChar>.allocate(capacity: logLength.l)
             glGetProgramInfoLog(program, logLength, &logLength, log)
             LogInfo("Program validate log:\n%@", args: String(cString: log))
-            log.deallocate(capacity: logLength.l)
+            log.deallocate()
         }
         
         glGetProgramiv(program, GL_VALIDATE_STATUS.ui, &status)

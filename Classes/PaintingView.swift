@@ -193,7 +193,8 @@ class PaintingView: UIView {
                 ]
             
             var prog: GLuint = 0
-            vsrc.withUnsafeBytes {(vsrcChars: UnsafePointer<GLchar>) in
+            vsrc.withUnsafeBytes {vsrcBytes in
+                let vsrcChars = vsrcBytes.bindMemory(to: GLchar.self).baseAddress!
                 
                 // auto-assign known attribs
                 for (j, name) in attribName.enumerated() {
@@ -203,7 +204,8 @@ class PaintingView: UIView {
                     }
                 }
                 
-                fsrc.withUnsafeBytes {(fsrcChars: UnsafePointer<GLchar>) in
+                fsrc.withUnsafeBytes {fsrcBytes in
+                    let fsrcChars = fsrcBytes.bindMemory(to: GLchar.self).baseAddress!
                     _ = glue.createProgram(UnsafeMutablePointer(mutating: vsrcChars), UnsafeMutablePointer(mutating: fsrcChars),
                                            attribUsed, attrib,
                                            uniformName, &program[i].uniform,
@@ -468,7 +470,8 @@ class PaintingView: UIView {
         let count = data.count / (MemoryLayout<Float32>.size*2) // each point contains 64 bits (32-bit x and 32-bit y)
         
         // Render the current path
-        data.withUnsafeBytes { (floats: UnsafePointer<Float32>) in
+        data.withUnsafeBytes { bytes in
+            let floats = bytes.bindMemory(to: Float32.self).baseAddress!
             for i in 0..<count - 1 {
                 
                 var x = floats[2*i]
